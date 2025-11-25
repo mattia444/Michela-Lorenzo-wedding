@@ -1,0 +1,326 @@
+﻿<!DOCTYPE html>
+<html lang="it-IT">
+<head>
+    <title>Michela & Lorenzo | Matrimonio</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="description" content="Sito del matrimonio di Michela e Lorenzo"/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            scroll-behavior: smooth;
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
+        }
+
+        .fade-in { opacity: 0; animation: fadeIn 1.2s ease forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* SEZIONE HOME CON FOTO A SCHERMO INTERO */
+        .hero {
+            height: 100vh;
+            background-image: url('foto.jpg'); /* La tua foto iniziale */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+            padding-top: 20px; 
+        }
+
+        .hero-overlay h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4em;
+            font-weight: 500;
+            margin-bottom: 5px; 
+        }
+        
+        .hero-overlay p.date-text {
+            font-family: 'Playfair Display', serif; 
+            font-size: 1.5em; 
+            font-weight: 400;
+            margin: 0;
+            padding: 0;
+            letter-spacing: 2px;
+        }
+
+        /* MENU */
+        #menu-toggle { display: none; }
+
+        /* --- HAMBURGER SOTTILE CON BACKGROUND PER VISIBILITÀ --- */
+        .menu-label {
+            position: fixed;
+            top: 20px; 
+            left: 20px; 
+            width: 40px; 
+            height: 40px; 
+            cursor: pointer;
+            z-index: 300;
+            background: rgba(0, 0, 0, 0.6); 
+            border-radius: 5px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .menu-label span,
+        .menu-label span::before,
+        .menu-label span::after {
+            position: absolute;
+            height: 2px;
+            width: 24px;
+            background: white;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .menu-label span {
+            position: relative;
+            top: 0;
+            left: 0;
+            transform: none;
+        }
+        .menu-label span::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 0;
+        }
+        .menu-label span::after {
+            content: "";
+            position: absolute;
+            top: 8px;
+            left: 0;
+        }
+
+        /* animazione X */
+        #menu-toggle:checked + .menu-label span {
+            background: transparent;
+        }
+        #menu-toggle:checked + .menu-label span::before {
+            transform: rotate(45deg);
+            top: 0;
+        }
+        #menu-toggle:checked + .menu-label span::after {
+            transform: rotate(-45deg);
+            top: 0;
+        }
+
+        .main-nav {
+            position: fixed; 
+            left: -260px;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: 3px 0 8px rgba(0,0,0,0.3);
+            transition: left 0.3s ease;
+            z-index: 250;
+        }
+        
+        #menu-toggle:checked ~ .main-nav {
+            left: 0;
+        }
+
+        /* TITOLO MENU */
+        .menu-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8em;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            color: #FF9966;
+        }
+
+        .main-nav a {
+            display: block;
+            padding: 15px 25px;
+            font-size: 1.1em;
+            text-decoration: none;
+            color: #FF9966;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .content-section {
+            padding: 70px 25px;
+            max-width: 900px;
+            margin: auto;
+            border-bottom: 1px solid #eee;
+        }
+
+        .content-section h2 {
+            font-family: 'Playfair Display', serif;
+            color: #FF9966;
+            font-size: 2.4em;
+            margin-bottom: 5px; 
+        }
+        
+        /* Stile per la data sotto Schedule */
+        .content-section p.section-date {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 1.1em;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .content-section h3 {
+            font-family: 'Playfair Display', serif;
+            color: #FF9966;
+            font-size: 1.6em;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        
+        /* Stile specifico per IBAN (Rinominato per Gifts) */
+        .iban-box {
+            background-color: #f7f7f7;
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 1.2em; /* Leggermente più grande per l'IBAN */
+            font-family: 'Playfair Display', serif; /* Stile elegante per l'IBAN */
+            color: #333;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        /* Stili per l'immagine del luogo */
+        .location-photo {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 40px auto; 
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Stile per il testo evidenziato */
+        .highlight {
+            font-weight: 500;
+            color: #FF9966;
+        }
+
+        /* STILI PER L'ICONA A DOPPIO ANELLO */
+        .icon-rings {
+            display: inline-block;
+            vertical-align: middle;
+            width: 1.2em;
+            height: 1.2em;
+            fill: none;
+            stroke: #FF9966;
+            stroke-width: 1.5;
+            margin: 0 5px;
+        }
+
+
+        @media (max-width: 768px) {
+            .hero-overlay h1 { font-size: 2.7em; }
+            .hero-overlay p.date-text { font-size: 1.2em; }
+            .hero-overlay { top: 65%; }
+            .content-section { padding: 50px 15px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="menu-label">
+        <span></span>
+    </label>
+
+    <nav class="main-nav">
+        <div class="menu-header">Michela & Lorenzo</div>
+        
+        <a href="#home">Home</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#gifts">Gifts</a>
+        <a href="#rsvp">RSVP</a>
+    </nav>
+
+    <section id="home" class="hero fade-in">
+        <div class="hero-overlay">
+            <h1>Michela & Lorenzo</h1>
+            <p class="date-text">Martedì 2 Giugno 2026</p> 
+        </div>
+    </section>
+
+    <section id="schedule" class="content-section fade-in">
+        <h2>Schedule</h2>
+        <p class="section-date">Martedì 2 Giugno 2026</p> 
+        
+        <h3>La Cerimonia e il Ricevimento</h3>
+        <p>Siamo felici di celebrare il nostro matrimonio con una <span class="highlight">cerimonia simbolica</span>, seguita subito dopo dal ricevimento, in <span class="highlight">un'unica splendida location</span>.</p>
+        <p>Vi accoglieremo alle <span class="highlight">ore 11:00</span> per la celebrazione, seguita dal pranzo e dai festeggiamenti.</p>
+        
+        <p style="margin-top: 20px;">
+            <svg class="icon-rings" viewBox="0 0 24 24">
+                <circle cx="10" cy="12" r="6"/>
+                <circle cx="14" cy="12" r="6"/>
+            </svg>
+            <span class="highlight">Location:</span> Casale 500
+        </p>
+        <p>
+            <svg class="icon-rings" viewBox="0 0 24 24">
+                <circle cx="10" cy="12" r="6"/>
+                <circle cx="14" cy="12" r="6"/>
+            </svg>
+            <span class="highlight">Indirizzo:</span> Via di Valle Caia, 29, 00071 Pomezia RM
+        </p>
+        <p>Visualizza la location: <a href="https://share.google/CP4uKeTKJYx5u0ZaR" target="_blank" rel="noopener noreferrer">Mappa del Luogo</a></p>
+    </section>
+
+    <div class="content-section fade-in" style="border-bottom: none; padding-top: 0;">
+        <img src="casale500.jpg" alt="Vista aerea di Casale 500" class="location-photo">
+    </div>
+    
+    <section id="gifts" class="content-section fade-in">
+        <h2>Gifts</h2>
+        
+        <p style="font-size: 1.1em; text-align: center; margin-bottom: 20px;">
+            La vostra presenza al nostro matrimonio è il regalo più bello!
+            <br>
+            Se desiderate farci un regalo, vi saremmo molto grati per un contributo al nostro viaggio di nozze 🏝️☀️
+        </p>
+        
+        <div class="iban-box">
+            IBAN: AAAAAAAAAAAAAAAAAA 
+        </div>
+        
+    </section>
+
+    <section id="rsvp" class="content-section fade-in" style="border-bottom:none;">
+        <h2>RSVP</h2>
+        <p>Vi preghiamo di confermare la vostra presenza il prima possibile, entro il <span class="highlight">30 Aprile 2026</span>. <a href="mailto:michela.lorenzo.wedding@email.it">Inviateci una mail qui!</a></p>
+    </section>
+
+<script>
+const menuToggle = document.getElementById('menu-toggle');
+
+function closeMenu() {
+    menuToggle.checked = false; 
+}
+
+document.querySelectorAll('.main-nav a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+    link.addEventListener('touchend', closeMenu);
+});
+</script>
+
+</body>
+</html>
