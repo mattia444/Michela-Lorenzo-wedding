@@ -238,7 +238,7 @@
             margin: 0 5px;
         }
         
-        /* STILI PER IL RINGRAZIAMENTO FINALE (AGGIUNTO) */
+        /* STILI PER IL RINGRAZIAMENTO FINALE */
         .thank-you-section {
             text-align: center;
             padding: 50px 25px 80px;
@@ -263,14 +263,14 @@
             line-height: 1.2;
         }
 
-        /* Stili per la nota PS (aggiunti) */
+        /* Stili per la nota PS */
         .rsvp-note {
             margin-top: 20px;
             padding-left: 20px; 
             font-size: 0.95em;
         }
         .rsvp-note ul {
-            list-style-type: none; /* Rimuove i pallini/quadrati di default */
+            list-style-type: none; 
             padding-left: 0;
             margin-top: 5px;
         }
@@ -280,11 +280,52 @@
             margin-bottom: 5px;
         }
         .rsvp-note ul li:before {
-            content: "-"; /* Usa il trattino come elenco */
+            content: "-"; 
             position: absolute;
             left: 0;
-            color: #9B6C6C; /* Colore accento */
+            color: #9B6C6C; 
             font-weight: 500;
+        }
+        
+        /* STILI PER COUNTDOWN (NUOVO) */
+        .countdown-section {
+            padding: 40px 15px;
+            max-width: 900px;
+            margin: auto;
+            text-align: center;
+            background-color: #FAF9F6; /* Mantiene lo stesso sfondo del body */
+            border-bottom: 1px solid #E0E0E0;
+        }
+        .countdown-title {
+            font-family: 'Playfair Display', serif;
+            color: #9B6C6C;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .countdown-unit {
+            text-align: center;
+        }
+        .countdown-unit span.value {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            font-size: 3em;
+            font-weight: 700;
+            color: #9B6C6C;
+            line-height: 1;
+        }
+        .countdown-unit span.label {
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #777;
+            margin-top: 5px;
+            text-transform: uppercase;
         }
 
 
@@ -295,6 +336,10 @@
             .content-section { padding: 50px 15px; }
             .thank-you-section h2 { font-size: 2.5em; } 
             .thank-you-section .signature { font-size: 1.5em; }
+            /* Adattamento countdown per mobile */
+            .countdown-unit span.value {
+                font-size: 2.2em;
+            }
         }
     </style>
 </head>
@@ -322,6 +367,23 @@
         </div>
     </section>
 
+    <section id="countdown" class="countdown-section fade-in">
+        <div class="countdown-title">Mancano...</div>
+        <div class="countdown-timer" id="wedding-countdown">
+            <div class="countdown-unit">
+                <span class="value" id="days">00</span>
+                <span class="label">Giorni</span>
+            </div>
+            <div class="countdown-unit">
+                <span class="value" id="hours">00</span>
+                <span class="label">Ore</span>
+            </div>
+            <div class="countdown-unit">
+                <span class="value" id="minutes">00</span>
+                <span class="label">Minuti</span>
+            </div>
+        </div>
+    </section>
     <section id="schedule" class="content-section fade-in">
         <h2>Schedule</h2>
         <p class="section-date">Martedì 2 Giugno 2026</p> 
@@ -399,6 +461,63 @@ document.querySelectorAll('.main-nav a').forEach(link => {
     link.addEventListener('click', closeMenu);
     link.addEventListener('touchend', closeMenu);
 });
+
+
+// LOGICA COUNTDOWN (AGGIUNTA)
+// Data del matrimonio: 2 Giugno 2026, 11:00:00
+const weddingDate = new Date("2026-06-02T11:00:00").getTime();
+
+const countdownFunction = setInterval(function() {
+    const now = new Date().getTime();
+    const distance = weddingDate - now;
+
+    // Calcoli per giorni, ore, minuti (senza secondi)
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+    // Aggiunge lo zero iniziale se il numero è < 10
+    const formatTime = (time) => String(time).padStart(2, '0');
+
+    // Aggiorna l'HTML solo se gli elementi esistono
+    if (document.getElementById("days")) {
+        document.getElementById("days").innerHTML = formatTime(days);
+        document.getElementById("hours").innerHTML = formatTime(hours);
+        document.getElementById("minutes").innerHTML = formatTime(minutes);
+    }
+
+    // Quando il countdown finisce
+    if (distance < 0) {
+        clearInterval(countdownFunction);
+        const countdownContainer = document.getElementById("wedding-countdown");
+        if (countdownContainer) {
+             countdownContainer.innerHTML = '<span class="value" style="font-size: 2em; color: #9B6C6C;">Oggi Sposi!</span>';
+        }
+        const countdownTitle = document.querySelector(".countdown-title");
+        if (countdownTitle) {
+            countdownTitle.innerHTML = '🎉 È il giorno!';
+        }
+    }
+}, 60000); // Aggiorna ogni minuto (60000 ms)
+
+// Esegui la funzione una volta subito per evitare il lampeggio iniziale "00"
+const initialRun = () => {
+    const now = new Date().getTime();
+    const distance = weddingDate - now;
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    
+    const formatTime = (time) => String(time).padStart(2, '0');
+
+    if (document.getElementById("days")) {
+        document.getElementById("days").innerHTML = formatTime(days);
+        document.getElementById("hours").innerHTML = formatTime(hours);
+        document.getElementById("minutes").innerHTML = formatTime(minutes);
+    }
+};
+initialRun();
 </script>
 
 </body>
